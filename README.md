@@ -11,3 +11,7 @@ com.demo:
     2.zkclient api使用
     
     3.curator api使用
+    
+    4.基于Zkclient实现master选举功能
+    
+    5.基于Zkclient实现数据的发布与订阅功能
