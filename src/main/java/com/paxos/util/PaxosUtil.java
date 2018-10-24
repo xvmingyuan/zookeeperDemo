@@ -15,7 +15,7 @@ public class PaxosUtil {
 	 * @brief 提案序列号生成：保证唯一且递增。参考chubby中提议生成算法
 	 * @param myID 提议者的ID
 	 * @param numCycle 生成提议的轮次
-	 * @param 提议者个数
+	 * @param proposerCount 提议者个数
 	 * @return 生成的提案id
 	 */
 	public static int generateId(int myID,int numCycle,int proposerCount) {
