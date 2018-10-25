@@ -1,5 +1,7 @@
 zookeeper 相关学习资料
+com.count: 
 
+    Zookeeper + Hadoop 实现可跨区域(可国际化)的销售订单自动统计的离线计算
 com.paxos: 
 
     paxos是分布式一致性算法,基础Paxos算法多线程的实现
