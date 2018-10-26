@@ -83,8 +83,8 @@ public class Sell {
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 		//2
-		job.setInputFormatClass(TextInputFormat.class);
-		job.setOutputFormatClass(TextOutputFormat.class);
+//		job.setInputFormatClass(TextInputFormat.class);
+//		job.setOutputFormatClass(TextOutputFormat.class);
 		
 		//2
 		FileInputFormat.setInputPaths(job, new Path(input));
@@ -96,7 +96,7 @@ public class Sell {
 	
 	public static Map<String, String> getPath(){
 		Map<String, String> path = new HashMap<String, String>();
-		path.put("sell", "/Users/xmy/Desktop/flow/sell.csv");// 本地的数据文件
+		path.put("sell", "/home/xmy/Desktop/data/sell.csv");// 本地的数据文件
 		path.put("input", HDFS + "/user/bigdata/sell/input");// HDFS的目录
 		path.put("output", HDFS + "/user/bigdata/sell/output"); // 输出目录
 		return path;

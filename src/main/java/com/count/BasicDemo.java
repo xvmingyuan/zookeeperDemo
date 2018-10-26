@@ -1,6 +1,7 @@
 package com.count;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
@@ -13,11 +14,14 @@ public class BasicDemo {
 	public static void main(String[] args) throws IOException,KeeperException,InterruptedException{
 //		// 创建一个与服务器的连接
 		ZooKeeper zK = new ZooKeeper(zkIp, outtime, new IWatcher());
-		// 查看根节点
-		System.out.println("ls =>"+zK.getChildren("/", true));
-		
-		Object object = new Object();
-		
+		// 查看节点
+		System.out.println("ls =>"+zK.getChildren("/queue", false));
+		List<String> children = zK.getChildren("/queue", false);
+		for (String child : children) {
+			zK.delete("/queue"+"/"+child, -1);
+		}
+		System.out.println("ls =>"+zK.getChildren("/queue", false));
+		zK.close();
 	}
 	
 	// 监控所有被触发的事件

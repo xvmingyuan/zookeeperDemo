@@ -79,14 +79,13 @@ public class Purchase {
 		job.setJarByClass(Purchase.class);
 
 		job.setMapperClass(PurchaseMapper.class);
-		;
 		job.setReducerClass(PurchaseReducer.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 
-		job.setInputFormatClass(TextInputFormat.class);
-		job.setOutputFormatClass(TextOutputFormat.class);
+//		job.setInputFormatClass(TextInputFormat.class);
+//		job.setOutputFormatClass(TextOutputFormat.class);
 
 		FileInputFormat.setInputPaths(job, new Path(input));
 		FileOutputFormat.setOutputPath(job, new Path(output));
@@ -96,7 +95,7 @@ public class Purchase {
 
 	public static Map<String, String> getPath() {
 		Map<String, String> path = new HashMap<String, String>();
-		path.put("purchase", "/Users/xmy/Desktop/flow/purchase.csv");// 本地的数据文件
+		path.put("purchase", "/home/xmy/Desktop/data/purchase.csv");// 本地的数据文件
 		path.put("input", HDFS + "/user/bigdata/purchase/input");// HDFS的目录
 		path.put("output", HDFS + "/user/bigdata/purchase/output"); // 输出目录
 		return path;

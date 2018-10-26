@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
  * @time：2018年10月25日 下午9:51:16
  */
 public class Other {
-	public static String file = "/Users/xmy/Desktop/flow/other.csv";
+//	public static String file = "/Users/xmy/Desktop/flow/other.csv";
+	public static String file = "/home/xmy/Desktop/data/other.csv";
 	public static final Pattern DELIMITER = Pattern.compile("[/t,]");
 	private static String month = "2013-01";
 

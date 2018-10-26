@@ -126,13 +126,20 @@ public class ZookeeperJob {
 		List<String> children = zk.getChildren(QUEUE, true);
 		int length = children.size();
 		System.out.println("Queue Complete:" + length + "/" + size);
-		if (length >= size && 
-				zk.exists(PURCHASE, false)!=null && 
-				zk.exists(SELL, false) !=null && 
-				zk.exists(OTHER, false)!=null) {
+		if (length >= size && zk.exists(PURCHASE, false) != null && zk.exists(SELL, false) != null
+				&& zk.exists(OTHER, false) != null) {
 			System.out.println("create " + PROFIT);
 			Profit.profit();
 			zk.create(PROFIT, PROFIT.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+			// 清空节点
+			deleteAll(zk, children);
+		}
+	}
+
+	// 清空节点
+	public static void deleteAll(ZooKeeper zk, List<String> children) throws Exception {
+		for (String child : children) {
+			zk.delete(QUEUE + "/" + child, -1);
 		}
 	}
 
@@ -142,23 +149,8 @@ public class ZookeeperJob {
 		public void process(WatchedEvent event) {
 			if (event.getType() == Event.EventType.NodeCreated && event.getPath().equals(PROFIT)) {
 				System.out.println("Queue has Completed!!!");
-				try {
-					deleteAll();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 		}
-	}
-
-	// 清空节点
-	public static void deleteAll() throws Exception {
-		ZooKeeper zk = connection("it01:2181", sessionTimeout);
-		List<String> children = zk.getChildren(QUEUE, true);
-		for (String child : children) {
-			zk.delete(QUEUE + "/" + child, -1);
-		}
-		zk.close();
 	}
 
 }

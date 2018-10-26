@@ -96,7 +96,7 @@ public class HdfsUtilHA {
 			IOUtils.closeStream(fsdis);
 			fSystem.close();
 		}
-		System.out.println(str);
+		System.out.println("read Result value: "+str);
 		return str;
 	}
 }
