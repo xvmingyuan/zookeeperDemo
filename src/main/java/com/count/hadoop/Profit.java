@@ -1,6 +1,8 @@
 package com.count.hadoop;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 /**
  * 利润
  * @author xmy
@@ -11,13 +13,20 @@ public class Profit {
 	public static void main(String[] args) throws Exception {
 		profit();
 	}
-	public static String profit() throws Exception {
+	public static Map<String, String> profit() throws Exception {
+		Map<String, String> map = new HashMap<String,String>();
 		int sell = getSell();
         int purchase = getPurchase();
         int other = getOther();
         int profit = purchase - sell - other;
+        
         System.out.printf("profit = purchase - sell - other = %d - %d - %d = %d\n", purchase , sell, other, profit);
-        return "profit = purchase - sell - other = "+profit;
+        
+        map.put("sell", String.valueOf(sell));
+        map.put("purchase", String.valueOf(purchase));
+        map.put("other", String.valueOf(other));
+        map.put("profit", String.valueOf(profit));
+        return map;
 	}
 	
 	public static Integer getPurchase() throws Exception {

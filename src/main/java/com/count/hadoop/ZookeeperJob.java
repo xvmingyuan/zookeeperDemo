@@ -2,6 +2,7 @@ package com.count.hadoop;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.DELETE;
 
@@ -27,13 +28,14 @@ public class ZookeeperJob {
 	final public static String OTHER = "/queue/other";
 	public static int size = 3;
 	public static int sessionTimeout = 60000;
-
+	public static String month = null;
 	// main
 	public static void main(String[] args) throws Exception {
 		if (args.length == 0) {
 			System.out.println("Please start a task:");
 		} else {
 			doAction(Integer.parseInt(args[0]));
+			month = args[1];
 		}
 
 	}
@@ -86,7 +88,9 @@ public class ZookeeperJob {
 	// doPurchase
 	public static void doPurchase(ZooKeeper zk) throws Exception {
 		if (zk.exists(PURCHASE, false) == null) {
-			Purchase.run(Purchase.getPath());
+			Map<String, String> path = Purchase.getPath();
+			path.put("month", month);
+			Purchase.run(path);
 			System.out.println("create " + PURCHASE);
 			zk.create(PURCHASE, PURCHASE.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		} else {
@@ -99,7 +103,9 @@ public class ZookeeperJob {
 	// doSell
 	public static void doSell(ZooKeeper zk) throws Exception {
 		if (zk.exists(SELL, false) == null) {
-			Sell.run(Sell.getPath());
+			Map<String, String> path = Sell.getPath();
+			path.put("month", month);
+			Sell.run(path);
 			System.out.println("create " + SELL);
 			zk.create(SELL, SELL.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		} else {
@@ -129,6 +135,7 @@ public class ZookeeperJob {
 		if (length >= size && zk.exists(PURCHASE, false) != null && zk.exists(SELL, false) != null
 				&& zk.exists(OTHER, false) != null) {
 			System.out.println("create " + PROFIT);
+			System.out.println("month : " + month);
 			Profit.profit();
 			zk.create(PROFIT, PROFIT.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 			// 清空节点

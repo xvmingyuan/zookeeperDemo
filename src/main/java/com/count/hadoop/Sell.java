@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.print.PrintException;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -27,9 +29,9 @@ public class Sell {
 	
 	public static final String HDFS = "hdfs://ns1";
 	public static final Pattern DELIMITER = Pattern.compile("[\t,]");
-	
+	private static String month = null;
 	public static class SellMapper extends Mapper<LongWritable, Text, Text, IntWritable>{
-		private String month = "2013-01";
+		
         private Text k = new Text(month);
         private IntWritable v = new IntWritable();
         private int money = 0;
@@ -66,8 +68,13 @@ public class Sell {
 		String local_data = path.get("sell");
         String input = path.get("input");
         String output = path.get("output");
-        String username = "xmy";
-        
+        String username = path.get("username");
+        if((month = path.get("month"))!=null) {
+			// 按月分文件
+			output = output+month;
+		}else {
+			throw new PrintException("need month! ");
+		}
 		//初始化HDFS
         HdfsUtilHA.initHDFS(username, HDFS, conf);
 		HdfsUtilHA.mkdirs(input);
@@ -99,6 +106,7 @@ public class Sell {
 		path.put("sell", "/home/xmy/Desktop/data/sell.csv");// 本地的数据文件
 		path.put("input", HDFS + "/user/bigdata/sell/input");// HDFS的目录
 		path.put("output", HDFS + "/user/bigdata/sell/output"); // 输出目录
+		path.put("username", "xmy"); // 输出目录
 		return path;
 	}
 	
@@ -107,6 +115,19 @@ public class Sell {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		run(getPath());
+		Map<String, String> path = getPath();
+		if(args.length>0) {
+			if (args[1] == null) {
+				throw new PrintException("need arg[1] : month! ");
+			} else {
+				path.put("month", args[1]);
+				run(path);
+			}
+		}else {
+			System.out.println("need two ages!!!");
+		}
+		
+
+	
 	}
 }
