@@ -11,13 +11,13 @@ import java.util.Map;
 public class Profit {
 	
 	public static void main(String[] args) throws Exception {
-		profit();
+		profit(args);
 	}
-	public static Map<String, String> profit() throws Exception {
+	public static Map<String, String> profit(String[] args) throws Exception {
 		Map<String, String> map = new HashMap<String,String>();
-		int sell = getSell();
-        int purchase = getPurchase();
-        int other = getOther();
+		int sell = getSell(args[0]);
+        int purchase = getPurchase(args[0]);
+        int other = getOther(args[0]);
         int profit = purchase - sell - other;
         
         System.out.printf("profit = purchase - sell - other = %d - %d - %d = %d\n", purchase , sell, other, profit);
@@ -29,16 +29,16 @@ public class Profit {
         return map;
 	}
 	
-	public static Integer getPurchase() throws Exception {
+	public static Integer getPurchase(String time) throws Exception {
 		HdfsUtilHA.initHDFS("xmy", Purchase.HDFS, Purchase.getConf());
-		return Integer.parseInt(HdfsUtilHA.readStr((Purchase.getPath().get("output") + "/part-r-00000")).trim());
+		return Integer.parseInt(HdfsUtilHA.readStr((Purchase.getPath().get("output") +time+ "/part-r-00000")).trim());
 	}
-	public static Integer getSell() throws Exception {
+	public static Integer getSell(String time) throws Exception {
 		HdfsUtilHA.initHDFS("xmy", Sell.HDFS, Sell.getConf());
-		return Integer.parseInt(HdfsUtilHA.readStr((Sell.getPath().get("output") + "/part-r-00000")).trim());
+		return Integer.parseInt(HdfsUtilHA.readStr((Sell.getPath().get("output") +time+ "/part-r-00000")).trim());
 	}
-	public static Integer getOther() throws IOException {
-		return Other.calcOther(Other.file);
+	public static Integer getOther(String time) throws IOException {
+		return Other.calcOther(Other.file,time);
 	}
 	
 }

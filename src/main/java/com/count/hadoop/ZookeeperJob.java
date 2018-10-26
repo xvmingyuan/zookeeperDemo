@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.DELETE;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -34,8 +33,10 @@ public class ZookeeperJob {
 		if (args.length == 0) {
 			System.out.println("Please start a task:");
 		} else {
-			doAction(Integer.parseInt(args[0]));
 			month = args[1];
+			System.out.println("month : "+month);
+			doAction(Integer.parseInt(args[0]));
+			
 		}
 
 	}
@@ -118,7 +119,7 @@ public class ZookeeperJob {
 	// doOther
 	public static void doOther(ZooKeeper zk) throws Exception {
 		if (zk.exists(OTHER, false) == null) {
-			Other.calcOther(Other.file);
+			Other.calcOther(Other.file,month);
 			System.out.println("create " + OTHER);
 			zk.create(OTHER, OTHER.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		} else {
@@ -135,8 +136,8 @@ public class ZookeeperJob {
 		if (length >= size && zk.exists(PURCHASE, false) != null && zk.exists(SELL, false) != null
 				&& zk.exists(OTHER, false) != null) {
 			System.out.println("create " + PROFIT);
-			System.out.println("month : " + month);
-			Profit.profit();
+			String[] args= {month};
+			Profit.profit(args);
 			zk.create(PROFIT, PROFIT.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 			// 清空节点
 			deleteAll(zk, children);

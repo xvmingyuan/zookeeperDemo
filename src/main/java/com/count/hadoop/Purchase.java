@@ -16,9 +16,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 /**
  * 购买
@@ -29,19 +27,20 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class Purchase {
 	public static final String HDFS = "hdfs://ns1";
 	public static final Pattern DELIMITER = Pattern.compile("[\t,]");
-	private static String month = null; // eg: 2013-01
+	public static String month; // eg: 2013-01
 
 	public static class PurchaseMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
-
-		private Text k = new Text(month);
+		
+		private Text k = new Text();
 		private IntWritable v = new IntWritable();
 		private int money = 0;
 
 		@Override
 		protected void map(LongWritable key, Text values, Context context) throws IOException, InterruptedException {
-			System.out.println(values.toString());
+			//System.out.println(values.toString());
 			String[] tokens = DELIMITER.split(values.toString());
-			if (tokens[3].startsWith(month)) {
+			k.set(context.getConfiguration().get("month"));
+			if (tokens[3].startsWith(context.getConfiguration().get("month"))) {
 				money = Integer.parseInt(tokens[1]) * Integer.parseInt(tokens[2]);// 单价*数量
 				v.set(money);
 				context.write(k, v);
@@ -76,6 +75,7 @@ public class Purchase {
 		String output = path.get("output");
 		
 		if((month = path.get("month"))!=null) {
+			conf.set("month", month);
 			// 按月分文件
 			output = output+month;
 		}else {
