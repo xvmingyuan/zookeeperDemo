@@ -88,10 +88,13 @@ public class HdfsUtilHA {
 		String str = null;
 		
 		try {
-			fsdis = fSystem.open(path);
-			IOUtils.copyBytes(fsdis, baos, 4096, false);
-			str = baos.toString();
-			
+			if(fSystem.exists(path)) {
+				fsdis = fSystem.open(path);
+				IOUtils.copyBytes(fsdis, baos, 4096, false);
+				str = baos.toString();
+			}else {
+				str="0";
+			}
 		} finally {
 			IOUtils.closeStream(fsdis);
 			fSystem.close();

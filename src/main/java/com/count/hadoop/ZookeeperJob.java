@@ -91,7 +91,9 @@ public class ZookeeperJob {
 		if (zk.exists(PURCHASE, false) == null) {
 			Map<String, String> path = Purchase.getPath();
 			path.put("month", month);
-			Purchase.run(path);
+			if(Profit.getPurchase(month)<=0) {
+				Purchase.run(path);
+			}
 			System.out.println("create " + PURCHASE);
 			zk.create(PURCHASE, PURCHASE.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		} else {
@@ -106,7 +108,9 @@ public class ZookeeperJob {
 		if (zk.exists(SELL, false) == null) {
 			Map<String, String> path = Sell.getPath();
 			path.put("month", month);
-			Sell.run(path);
+			if(Profit.getSell(month)<=0) {
+				Sell.run(path);
+			}
 			System.out.println("create " + SELL);
 			zk.create(SELL, SELL.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		} else {
